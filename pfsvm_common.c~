@@ -1,0 +1,225 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+#include "pfsvm.h"
+
+FILE *fileopen(char *filename, const char *mode)
+{
+    FILE *fp;
+    fp = fopen(filename, mode);
+    if (fp == NULL) {
+	fprintf(stderr, "Can\'t open %s!\n", filename);
+	exit(1);
+    }
+    return (fp);
+}
+
+void *alloc_mem(size_t size)
+{
+    void *ptr;
+    if ((ptr = (void *)malloc(size)) == NULL) {
+	fprintf(stderr, "Can\'t allocate memory (size = %d)!\n", (int)size);
+	exit(1);
+    }
+    return (ptr);
+}
+
+void **alloc_2d_array(int height, int width, int size)
+{
+    void **mat;
+    char *ptr;
+    int k;
+
+    mat = (void **)alloc_mem(sizeof(void *) * height + height * width * size);
+    ptr = (char *)(mat + height);
+    for (k = 0; k < height; k++) {
+	mat[k] =  ptr;
+	ptr += width * size;
+    }
+    return (mat);
+}
+
+IMAGE *alloc_image(int width, int height, int maxval)
+{
+    IMAGE *img;
+    img = (IMAGE *)alloc_mem(sizeof(IMAGE));
+    img->width = width;
+    img->height = height;
+    img->maxval = maxval;
+    img->val = (img_t **)alloc_2d_array(img->height, img->width,
+					sizeof(img_t));
+    return (img);
+}
+
+void free_image(IMAGE *img)
+{
+    if (img != NULL && img->val != NULL) {
+	free(img->val);
+	free(img);
+    } else {
+	printf("! error in free_image()\n");
+	exit(1);
+    }
+}
+
+IMAGE *read_pgm(char *filename)
+{
+    int i, j, width, height, maxval;
+    char tmp[256];
+    IMAGE *img;
+    FILE *fp;
+
+    fp = fileopen(filename, "rb");
+    fgets(tmp, 256, fp);
+    if (tmp[0] != 'P' || tmp[1] != '5') {
+	fprintf(stderr, "Not a PGM file!\n");
+	exit(1);
+    }
+    while (*(fgets(tmp, 256, fp)) == '#');
+    sscanf(tmp, "%d %d", &width, &height);
+    while (*(fgets(tmp, 256, fp)) == '#');
+    sscanf(tmp, "%d", &maxval);
+    img = alloc_image(width, height, maxval);
+    for (i = 0; i < img->height; i++) {
+	for (j = 0; j < img->width; j++) {
+	    img->val[i][j] = (img_t)fgetc(fp);
+	}
+    }
+    fclose(fp);
+    return (img);
+}
+
+void write_pgm(IMAGE *img, char *filename)
+{
+    int i, j;
+    FILE *fp;
+    fp = fileopen(filename, "wb");
+    fprintf(fp, "P5\n%d %d\n%d\n", img->width, img->height, img->maxval);
+    for (i = 0; i < img->height; i++) {
+	for (j = 0; j < img->width; j++) {
+	    putc(img->val[i][j], fp);
+	}
+    }
+    fclose(fp);
+    return;
+}
+
+double calc_snr(IMAGE *img1, IMAGE *img2)
+{
+    int i, j, d;
+    double mse;
+
+    mse = 0.0;
+    for (i = 0; i < img1->height; i++) {
+	for (j = 0; j < img1->width; j++) {
+	    d = img1->val[i][j] - img2->val[i][j];
+	    mse += d * d;
+	}
+    }
+    mse /= (img1->width * img1->height);
+    return (10.0 * log10(255 * 255 / mse));
+}
+
+void  set_thresholds(IMAGE *org, IMAGE *dec, int num_class, double *th_list)
+{
+    int hist[MAX_DIFF + 1];
+    int i, j, k;
+    double class_size, sigma = 0;
+    
+    for (k = 0; k < MAX_DIFF + 1; k++) {
+	hist[k] = 0;
+    }
+    for (i = 0; i < org->height; i++) {
+	for (j = 0; j < org->width; j++) {
+	    k = org->val[i][j] - dec->val[i][j];
+	    if (k < 0) k = -k;
+	    if (k > MAX_DIFF) k = MAX_DIFF;
+	    hist[k]++;
+	}
+    }
+    for (k = 0; k < MAX_DIFF + 1; k++) {
+	printf("%4d%8d\n", k, hist[k]);
+	sigma += k * k * hist[k];
+    }
+    class_size = (double)(org->width * org->height) / num_class;
+    i = 0;
+    for (k = 0; k < MAX_DIFF; k++) {
+	if (hist[k] > class_size * (1 + 2 * i)) {
+	    th_list[i++] = k + 0.5;
+	}
+	hist[k + 1] += hist[k];
+    }
+    sigma = sqrt(sigma / (org->height * org->width));
+//    if (NUM_CLASS == 3) th_list[0] = 0.7 * sigma;
+}
+
+int get_label(IMAGE *org, IMAGE *dec, int i, int j, int num_class, double *th_list)
+{
+    int d, sgn, k;
+
+    d = org->val[i][j] - dec->val[i][j];
+    if (d > 0) {
+	sgn = 1;
+    } else {
+	d = -d;
+	sgn = -1;
+    }
+    for (k = 0; k < num_class / 2; k++) {
+	if (d < th_list[k]) break;
+    }
+    return (sgn * k + num_class / 2);
+}
+
+int get_fvector(IMAGE *img, int i, int j, double gain, double *fvector)
+{
+    typedef struct {
+	int y, x;
+    } POINT;
+    const POINT dyx[] = {
+	/* 0 (1) */
+	{ 0, 0},
+	/* 1 (5) */
+	{ 0,-1}, {-1, 0}, { 0, 1}, { 1, 0},
+	/* 2 (13) */
+	{ 0,-2}, {-1,-1}, {-2, 0}, {-1, 1}, { 0, 2}, { 1, 1}, { 2, 0}, { 1,-1},
+	/* 3 (25) */
+	{ 0,-3}, {-1,-2}, {-2,-1}, {-3, 0}, {-2, 1}, {-1, 2}, { 0, 3}, { 1, 2},
+	{ 2, 1}, { 3, 0}, { 2,-1}, { 1,-2}
+    };
+    int k, x, y, v0, vk, num_nonzero;
+
+    v0 = img->val[i][j];
+    num_nonzero = 0;
+    for (k= 0; k < NUM_FEATURES; k++) {
+	y = i + dyx[k + 1].y;
+	if (y < 0) y = 0;
+	if (y > img->height - 1) y =  img->height - 1;
+	x = j + dyx[k + 1].x;
+	if (x < 0) x = 0;
+	if (x > img->width - 1) x =  img->width - 1;
+	vk = img->val[y][x] - v0;
+	if (vk != 0) num_nonzero++;
+	fvector[k] = 2.0 / (1 + exp(-(double)vk * gain)) - 1.0;
+    }
+    return (num_nonzero);
+}
+
+double cpu_time(void)
+{
+#ifndef CLK_TCK
+#  define CLK_TCK 60
+#endif
+    static clock_t prev = 0;
+    clock_t cur, dif;
+
+    cur = clock();
+    if (cur > prev) {
+	dif = cur - prev;
+    } else {
+	dif = (unsigned)cur - prev;
+    }
+    prev = cur;
+
+    return ((double)dif / CLOCKS_PER_SEC);
+}

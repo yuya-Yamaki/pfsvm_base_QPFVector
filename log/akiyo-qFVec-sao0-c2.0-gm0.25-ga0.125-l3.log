@@ -1,0 +1,351 @@
+Running at Linux compute-0-27 3.10.0-957.12.2.el7.x86_64 #1 SMP Tue May 14 21:24:32 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+Test image is akiyo.pgm
+/rda1/users/yamaki/cif_pgm/carphone.pgm ./dec_dir/carphone-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/carphone.pgm ./dec_dir/carphone-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/carphone.pgm ./dec_dir/carphone-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/carphone.pgm ./dec_dir/carphone-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/coastguard.pgm ./dec_dir/coastguard-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/coastguard.pgm ./dec_dir/coastguard-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/coastguard.pgm ./dec_dir/coastguard-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/coastguard.pgm ./dec_dir/coastguard-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/container.pgm ./dec_dir/container-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/container.pgm ./dec_dir/container-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/container.pgm ./dec_dir/container-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/container.pgm ./dec_dir/container-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/foreman.pgm ./dec_dir/foreman-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/foreman.pgm ./dec_dir/foreman-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/foreman.pgm ./dec_dir/foreman-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/foreman.pgm ./dec_dir/foreman-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/hall.pgm ./dec_dir/hall-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/hall.pgm ./dec_dir/hall-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/hall.pgm ./dec_dir/hall-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/hall.pgm ./dec_dir/hall-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/mobile.pgm ./dec_dir/mobile-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/mobile.pgm ./dec_dir/mobile-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/mobile.pgm ./dec_dir/mobile-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/mobile.pgm ./dec_dir/mobile-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/mother_daughter.pgm ./dec_dir/mother_daughter-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/mother_daughter.pgm ./dec_dir/mother_daughter-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/mother_daughter.pgm ./dec_dir/mother_daughter-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/mother_daughter.pgm ./dec_dir/mother_daughter-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/news.pgm ./dec_dir/news-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/news.pgm ./dec_dir/news-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/news.pgm ./dec_dir/news-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/news.pgm ./dec_dir/news-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/silent.pgm ./dec_dir/silent-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/silent.pgm ./dec_dir/silent-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/silent.pgm ./dec_dir/silent-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/silent.pgm ./dec_dir/silent-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/tempete.pgm ./dec_dir/tempete-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/tempete.pgm ./dec_dir/tempete-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/tempete.pgm ./dec_dir/tempete-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/tempete.pgm ./dec_dir/tempete-22-dec.pgm
+/rda1/users/yamaki/cif_pgm/waterfall.pgm ./dec_dir/waterfall-37-dec.pgm
+/rda1/users/yamaki/cif_pgm/waterfall.pgm ./dec_dir/waterfall-32-dec.pgm
+/rda1/users/yamaki/cif_pgm/waterfall.pgm ./dec_dir/waterfall-27-dec.pgm
+/rda1/users/yamaki/cif_pgm/waterfall.pgm ./dec_dir/waterfall-22-dec.pgm
+   0  692405
+   1 1166363
+   2  810592
+   3  534301
+   4  351119
+   5  235434
+   6  163899
+   7  117932
+   8   87528
+   9   65456
+  10   49723
+  11   38395
+  12   29932
+  13   23461
+  14   18645
+  15   14650
+  16   11692
+  17    9482
+  18    7707
+  19    6080
+  20    4899
+  21    3924
+  22    3373
+  23    2594
+  24    2106
+  25    1649
+  26    1408
+  27    1105
+  28     928
+  29     766
+  30     593
+  31     462
+  32     412
+  33     325
+  34     228
+  35     174
+  36     149
+  37     135
+  38     106
+  39      78
+  40     334
+Number of classes = 3
+Number of training images = 44
+Thresholds = {1.5}
+Gain factor = 0.125000
+SVM(gamma, C) = (0.250000,2.000000)
+Number of samples = 44649 (449351)
+CLASS[0] = 13109
+CLASS[1] = 18322
+CLASS[2] = 13218
+..............................................................*
+optimization finished, #iter = 62127
+nu = 0.663731
+obj = -40657.297700, rho = 0.302551
+nSV = 22000, nBSV = 19924
+.................................................................*
+optimization finished, #iter = 65955
+nu = 0.666745
+obj = -40761.530732, rho = 0.221551
+nSV = 22016, nBSV = 19935
+.........................*
+optimization finished, #iter = 25274
+nu = 0.874520
+obj = -43981.256521, rho = -0.045150
+nSV = 23682, nBSV = 22293
+Total nSV = 39250
+cpu time: 281.04 sec.
+   0   15991
+   1   28425
+   2   19707
+   3   12177
+   4    7360
+   5    4719
+   6    3017
+   7    2196
+   8    1631
+   9    1194
+  10     892
+  11     757
+  12     600
+  13     512
+  14     426
+  15     319
+  16     265
+  17     255
+  18     189
+  19     171
+  20     123
+  21      88
+  22      74
+  23      59
+  24      36
+  25      44
+  26      21
+  27      27
+  28      22
+  29      14
+  30      15
+  31      11
+  32       6
+  33       8
+  34       5
+  35       6
+  36       7
+  37       1
+  38       2
+  39       0
+  40       4
+PSNR = 35.22 (dB)
+# of classes = 3
+Thresholds = {1.5}
+Gain factor = 0.125000
+Accuracy = 49.87 (%)
+Offset[0] = -1.23 (13514)
+Offset[1] = 0.04 (72278)
+Offset[2] = 0.88 (15584)
+PSNR = 35.288 (dB)
+GAIN = +0.070 (dB)
+SIDE_INFO = 7 (bits)
+cpu time: 176.26 sec.
+   0   20651
+   1   33710
+   2   20655
+   3   10960
+   4    5392
+   5    3181
+   6    1987
+   7    1363
+   8     949
+   9     723
+  10     541
+  11     368
+  12     269
+  13     176
+  14     131
+  15     104
+  16      71
+  17      47
+  18      43
+  19      16
+  20      13
+  21       6
+  22       9
+  23       2
+  24       2
+  25       0
+  26       4
+  27       0
+  28       2
+  29       0
+  30       1
+  31       0
+  32       0
+  33       0
+  34       0
+  35       0
+  36       0
+  37       0
+  38       0
+  39       0
+  40       0
+PSNR = 38.53 (dB)
+# of classes = 3
+Thresholds = {1.5}
+Gain factor = 0.125000
+Accuracy = 56.18 (%)
+Offset[0] = -0.71 (12433)
+Offset[1] = -0.01 (73729)
+Offset[2] = 0.57 (15214)
+PSNR = 38.561 (dB)
+GAIN = +0.035 (dB)
+SIDE_INFO = 7 (bits)
+cpu time: 176.46 sec.
+   0   25057
+   1   38667
+   2   20316
+   3    8779
+   4    3952
+   5    2170
+   6    1110
+   7     617
+   8     337
+   9     191
+  10      93
+  11      45
+  12      24
+  13       8
+  14       5
+  15       4
+  16       1
+  17       0
+  18       0
+  19       0
+  20       0
+  21       0
+  22       0
+  23       0
+  24       0
+  25       0
+  26       0
+  27       0
+  28       0
+  29       0
+  30       0
+  31       0
+  32       0
+  33       0
+  34       0
+  35       0
+  36       0
+  37       0
+  38       0
+  39       0
+  40       0
+PSNR = 41.70 (dB)
+# of classes = 3
+Thresholds = {1.5}
+Gain factor = 0.125000
+Accuracy = 63.35 (%)
+Offset[0] = -0.41 (5040)
+Offset[1] = 0.05 (90753)
+Offset[2] = 0.27 (5583)
+PSNR = 41.703 (dB)
+GAIN = +0.000 (dB)
+SIDE_INFO = 3 (bits)
+cpu time: 175.54 sec.
+   0   30265
+   1   43920
+   2   18482
+   3    5993
+   4    1880
+   5     598
+   6     165
+   7      50
+   8      16
+   9       4
+  10       2
+  11       1
+  12       0
+  13       0
+  14       0
+  15       0
+  16       0
+  17       0
+  18       0
+  19       0
+  20       0
+  21       0
+  22       0
+  23       0
+  24       0
+  25       0
+  26       0
+  27       0
+  28       0
+  29       0
+  30       0
+  31       0
+  32       0
+  33       0
+  34       0
+  35       0
+  36       0
+  37       0
+  38       0
+  39       0
+  40       0
+PSNR = 44.63 (dB)
+# of classes = 3
+Thresholds = {1.5}
+Gain factor = 0.125000
+Accuracy = 73.07 (%)
+Offset[0] = 0.04 (212)
+Offset[1] = -0.00 (100998)
+Offset[2] = 0.14 (166)
+PSNR = 44.632 (dB)
+GAIN = +0.000 (dB)
+SIDE_INFO = 3 (bits)
+cpu time: 177.95 sec.
+0
+35.22	38.53	41.70	44.63
+1465	2381	3818	5939
+35.29	38.56	41.70	44.63
+1466	2382	3819	5940
+--------------------------------------------------------------------------
+ SNR input file               : snr.txt 
+--------------------------------------------------------------------------
+ Computing average differance of 2 datasets 
+ Logaritmic mode 
+ Areal of integrated area()  = 0.018470
+ Write to 'log.dat' 
+ AvSNR version 4 
+1
+35.22	38.53	41.70	44.63
+1465	2381	3818	5939
+35.29	38.56	41.70	44.63
+1466	2382	3819	5940
+--------------------------------------------------------------------------
+ SNR input file               : snr.txt 
+--------------------------------------------------------------------------
+ Computing average differance of 2 datasets 
+ Percentage mode 
+ Percentage difference between the courves are = -0.273230
+ Write to 'log.dat' 
+ AvSNR version 4 

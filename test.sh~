@@ -1,0 +1,24 @@
+#! /bin/sh
+DIR="/rda2/DATABASE/TMW"
+TRAINING=camera
+QUALITY=75
+MODEL="model-$TRAINING-q$QUALITY.svm"
+LOG=`basename $MODEL .svm`".log"
+echo "Running at "`uname -a` | tee $LOG
+echo "Training image is $TRAINING.pgm" | tee -a $LOG
+pnmtojpeg -quality=$QUALITY "$DIR/$TRAINING.pgm" > tmp.jpg
+jpegtopnm tmp.jpg > decoded.pgm
+time ./pfsvm_train "$DIR/$TRAINING.pgm" decoded.pgm $MODEL | tee -a $LOG
+time ./pfsvm_eval "$DIR/$TRAINING.pgm" decoded.pgm $MODEL modified.pgm | tee -a $LOG
+
+for IMG in `ls $DIR/*.pgm`
+do
+	if [ `basename $IMG .pgm` != $TRAINING ];
+	then
+		echo "-----------------------------------" | tee -a $LOG
+		echo "Evaluation for "`basename $IMG` | tee -a $LOG
+		pnmtojpeg -quality=$QUALITY $IMG > tmp.jpg
+		jpegtopnm tmp.jpg > decoded.pgm	
+		time ./pfsvm_eval $IMG decoded.pgm $MODEL modified.pgm | tee -a $LOG
+	fi
+done

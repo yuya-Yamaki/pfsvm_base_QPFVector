@@ -1,0 +1,23 @@
+#define MAX_CLASS 13
+#define NUM_FEATURES 12
+#define MAX_DIFF 40
+#define Malloc(type,n) (type *)malloc((n)*sizeof(type))
+
+typedef unsigned char img_t;
+typedef struct {
+  int height;
+  int width;
+  int maxval;
+  img_t **val;
+} IMAGE;
+
+void *alloc_mem(size_t);
+void **alloc_2d_array(int, int, int);
+IMAGE *alloc_image(int, int, int);
+IMAGE *read_pgm(char *);
+void write_pgm(IMAGE *, char *);
+double calc_snr(IMAGE *, IMAGE *);
+void set_thresholds(IMAGE *, IMAGE *, int, double *);
+int get_label(IMAGE *, IMAGE *, int, int, int, double *);
+int get_fvector(IMAGE *, int, int, double, double *);
+double cpu_time(void);
