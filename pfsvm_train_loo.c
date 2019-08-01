@@ -14,7 +14,7 @@ struct svm_node *x_space;
 #define RND_SEED 12345L
 #ifdef LEAVE_ONE_OUT
 #  define MAX_IMAGE 256
-#  define SAMPLE_RATIO 0.01
+#  define SAMPLE_RATIO 0.1
 #else
 #  define MAX_IMAGE 1
 #  define SAMPLE_RATIO 1.01
@@ -22,18 +22,18 @@ struct svm_node *x_space;
 
 /*
     struct svm_problem describes the problem:
-	
+
 	struct svm_problem
 	{
 		int l;
 		double *y;
 		struct svm_node **x;
 	};
- 
+
     where `l' is the number of training data, and `y' is an array containing
     their target values. (integers in classification, real numbers in
     regression) `x' is an array of pointers, each of which points to a sparse
-    representation (array of svm_node) of one training vector. 
+    representation (array of svm_node) of one training vector.
 
     For example, if we have the following training data:
 
@@ -73,7 +73,7 @@ struct svm_node *x_space;
 pfsvm_train.cと全く同じコード
 統計学において標本データを分割し，その一部をまず解析して，残る部分でその解析のテストを行い，解析自身の妥当性の検証・確認に当てる手法*/
 
-int set_images(char *org_dir, char *dec_dir, IMAGE **oimg_list, IMAGE **dimg_list)
+int set_images(char *org_dir, char *dec_dir, IMAGE **oimg_list, IMAGE **dimg_list, int *QP_param)
 {
 #ifdef LEAVE_ONE_OUT
     FILE *fp;
@@ -112,9 +112,12 @@ int set_images(char *org_dir, char *dec_dir, IMAGE **oimg_list, IMAGE **dimg_lis
 			sprintf(dec_img, "%s-%d.pgm", filename[i], QP[q]);
 			strcpy(dec_img + strlen(dec_img) - 4, "-dec.pgm");
 			//./dec_dir/carphone-dec.pgm
-			if ((fp = fopen(dec_img, "r")) == NULL)//評価画像の画像で学習しない．dec_dirにないため評価画像の復号画像はNULLを吐く
+			if ((fp = fopen(dec_img, "r")) == NULL){//評価画像の画像で学習しない．dec_dirにないため評価画像の復号画像はNULLを吐く
+				i++;
 				continue;
+			}
 			fclose(fp);
+			QP_param[num_img] = QP[q];
 			printf("%s %s\n", org_img, dec_img);
 			oimg_list[num_img] = read_pgm(org_img);
 			dimg_list[num_img] = read_pgm(dec_img);
@@ -141,8 +144,7 @@ int main(int argc, char **argv)
     const char *error_msg;
     static double svm_c = 1.0, svm_gamma = 1.0 / NUM_FEATURES;
     static char *org_dir = NULL, *dec_dir = NULL, *modelfile = NULL;
-	int QP[4] = {37,32,27,22};
-	int qp_count = 0;
+	int QP_param[MAX_IMAGE];
 
     cpu_time();
     setbuf(stdout, 0);
@@ -179,7 +181,7 @@ int main(int argc, char **argv)
 	    }
 	}
     }
-    if (modelfile == NULL) {
+	if (modelfile == NULL) {
 #ifdef LEAVE_ONE_OUT
 	printf("Usage: %s [options] original_dir decoded_dir model.svm\n",
 #else
@@ -192,7 +194,7 @@ int main(int argc, char **argv)
 	printf("    -S num  Gain factor for sigmoid function [%f]\n", sig_gain);
 	exit(0);
     }
-    num_img = set_images(org_dir, dec_dir, oimg_list, dimg_list);//ここで画像リストをセットしている
+    num_img = set_images(org_dir, dec_dir, oimg_list, dimg_list, QP_param);//ここで画像リストをセットしている
     set_thresholds(oimg_list, dimg_list, num_img, num_class, th_list);
     printf("Number of classes = %d\n", num_class);
     printf("Number of training images = %d\n", num_img);
@@ -268,7 +270,8 @@ int main(int argc, char **argv)
 		    }
 			if (k == 12){
 				x_space[n].index = k + 1;
-				x_space[n].value = QP[qp_count];
+				//QP_param[num_img] = 2.0 / (1 + exp(-(double)QP_param[num_img] * gain)) - 1.0;
+				x_space[n].value = QP_param[num_img];
 				n++;
 			}
 		    x_space[n++].index = -1;
@@ -276,9 +279,7 @@ int main(int argc, char **argv)
 		}
 	    }
 	}
-	qp_count++;
-	if(qp_count == 4)qp_count=0;
-    }
+	}
     for (k = 0; k < num_class; k++) {
 	printf("CLASS[%d] = %d\n", k, cls[k]);
     }

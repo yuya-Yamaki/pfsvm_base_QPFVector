@@ -29,6 +29,8 @@ TRAIN_DIR=~/HD_pgm/
 HD_DIR=~/HD_pgm/
 DEC_DIR=./dec_dir
 
+QP_array=(37 32 27 22)
+
 echo "Running at "`uname -a` > $LOG
 echo "Test image is $TESTIMAGE" | tee -a $LOG
 if [ -d $DEC_DIR ];
@@ -41,8 +43,10 @@ for ORG_IMG in `ls $TRAIN_DIR*.pgm`
 do
 	if [ `basename $ORG_IMG` != $TESTIMAGE ];
 	then
+		randomNumber=$(( $RANDOM%4))
+		QP=${QP_array[$randomNumber]}
 		DEC_IMG=`basename $ORG_IMG .pgm`
-		DEC_IMG=$DEC_DIR"/$DEC_IMG-dec.pgm"
+		DEC_IMG=$DEC_DIR"/$DEC_IMG-$QP-dec.pgm"
 		echo $ORG_IMG $DEC_IMG
 		WIDTH=`pamfile $ORG_IMG | gawk '{print $4}'`
 		HEIGHT=`pamfile $ORG_IMG | gawk '{print $6}'`
@@ -86,7 +90,7 @@ do
 	rawtopgm $WIDTH $HEIGHT rec8bit.y > reconst.pgm
 	#./import_TUinfo $count
 	#./pfsvm_eval -S $GAIN $ORG_IMG reconst.pgm $MODEL $MODELBLK modified.pgm | tee -a $LOG
-	./pfsvm_eval -S $GAIN $ORG_IMG reconst.pgm $MODEL modified.pgm | tee -a $LOG
+	./pfsvm_eval -S $GAIN $ORG_IMG reconst.pgm $MODEL modified.pgm $QP| tee -a $LOG
         SIZE=`ls -l str.bin | gawk '{print $5}'`
 	SIDE_INFO=`tail $LOG | grep SIDE_INFO | gawk '{print int(($3 + 7) / 8)}'`
 	SIZE=`expr $SIZE + $SIDE_INFO`

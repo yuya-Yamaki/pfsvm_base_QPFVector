@@ -24,6 +24,8 @@ AVSNR=~/avsnr/avsnr
 ORG_DIR=~/cif_pgm/
 DEC_DIR=./dec_dir
 
+QP_array=(37 32 27 22)
+
 echo "Running at "`uname -a` > $LOG
 echo "Test image is $TESTIMAGE" | tee -a $LOG
 if [ -d $DEC_DIR ];
@@ -34,21 +36,20 @@ mkdir $DEC_DIR
 
 for ORG_IMG in `ls $ORG_DIR*.pgm`
 do
-	for QP in 37 32 27 22
-	do
-		if [ `basename $ORG_IMG` != $TESTIMAGE ];
-		then
-			DEC_IMG=`basename $ORG_IMG .pgm`
-			DEC_IMG=$DEC_DIR"/$DEC_IMG-$QP-dec.pgm"
-			echo $ORG_IMG $DEC_IMG
-			WIDTH=`pamfile $ORG_IMG | gawk '{print $4}'`
-			HEIGHT=`pamfile $ORG_IMG | gawk '{print $6}'`
-			tail -n +4 $ORG_IMG > input.y
-			$HMENC $HMOPT -q $QP -wdt $WIDTH -hgt $HEIGHT --SAO=$SAO -i input.y
-			$HMDEC -d 8 -b str.bin -o rec8bit.y
-			rawtopgm $WIDTH $HEIGHT rec8bit.y > $DEC_IMG
-		fi
-	done
+	if [ `basename $ORG_IMG` != $TESTIMAGE ];
+	then
+		randomNumber=$(( $RANDOM%4))
+		QP=${QP_array[$randomNumber]}
+		DEC_IMG=`basename $ORG_IMG .pgm`
+		DEC_IMG=$DEC_DIR"/$DEC_IMG-$QP-dec.pgm"
+		echo $ORG_IMG $DEC_IMG
+		WIDTH=`pamfile $ORG_IMG | gawk '{print $4}'`
+		HEIGHT=`pamfile $ORG_IMG | gawk '{print $6}'`
+		tail -n +4 $ORG_IMG > input.y
+		$HMENC $HMOPT -q $QP -wdt $WIDTH -hgt $HEIGHT --SAO=$SAO -i input.y
+		$HMDEC -d 8 -b str.bin -o rec8bit.y
+		rawtopgm $WIDTH $HEIGHT rec8bit.y > $DEC_IMG
+	fi
 done
 ./pfsvm_train_loo -C $C -G $GAMMA -L $LEVEL -S $GAIN $ORG_DIR $DEC_DIR $MODEL| tee -a $LOG
 

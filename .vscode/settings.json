@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "PFSVM_TRAIN_LOO.C": "cpp",
-        "VISUALIZE.C": "cpp"
+        "VISUALIZE.C": "cpp",
+        "PFSVM_COMMON.C": "cpp"
     }
 }
