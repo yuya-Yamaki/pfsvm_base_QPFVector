@@ -14,7 +14,7 @@ struct svm_node *x_space;
 #define RND_SEED 12345L
 #ifdef LEAVE_ONE_OUT
 #  define MAX_IMAGE 256
-#  define SAMPLE_RATIO 0.1
+#  define SAMPLE_RATIO 0.01
 #else
 #  define MAX_IMAGE 1
 #  define SAMPLE_RATIO 1.01
@@ -145,8 +145,11 @@ int main(int argc, char **argv)
     static double svm_c = 1.0, svm_gamma = 1.0 / NUM_FEATURES;
     static char *org_dir = NULL, *dec_dir = NULL, *modelfile = NULL;
 	int QP_param[MAX_IMAGE];
+	/*int Avg_QP, range_QP;
+	Avg_QP = 29.5;
+	range_QP = 15;*/
 
-    cpu_time();
+	cpu_time();
     setbuf(stdout, 0);
     for (i = 1; i < argc; i++) {
 	if (argv[i][0] == '-') {
@@ -270,8 +273,9 @@ int main(int argc, char **argv)
 		    }
 			if (k == 12){
 				x_space[n].index = k + 1;
-				//QP_param[num_img] = 2.0 / (1 + exp(-(double)QP_param[num_img] * gain)) - 1.0;
-				x_space[n].value = QP_param[num_img];
+				QP_param[img] = 2.0 / (1 + exp(-(double)QP_param[img] * sig_gain)) - 1.0;//sigmoid.func
+				//QP_param[img] = (QP_param[img] - Avg_QP) / range_QP;//normalization
+				x_space[n].value = QP_param[img];
 				n++;
 			}
 		    x_space[n++].index = -1;

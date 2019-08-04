@@ -19,6 +19,9 @@ int main(int argc, char **argv)
     double sn_before, sn_after;
     static char *orgimg = NULL, *decimg = NULL, *modelfile = NULL, *modimg = NULL;
     int QP = 0;
+    /*int Avg_QP, range_QP;
+    Avg_QP = 29.5;
+    range_QP = 15;*/
 
     cpu_time();
     setbuf(stdout, 0);
@@ -95,8 +98,10 @@ int main(int argc, char **argv)
 	    }
         if (k == 12) {
             x[n].index = k + 1;
+            QP = 2.0 / (1 + exp(-(double)QP * sig_gain)) - 1.0;//sigmoid.func
+            //QP = (QP - Avg_QP) / range_QP; //normalization
             x[n].value = QP;
-            n++;    
+            n++;
         }
 /*各画素を三つのクラスに分類したので，その各画素にラベルを割り当てている*/
 	    x[n].index = -1;

@@ -20,7 +20,7 @@ MODEL="./model/$TASK.svm"
 LOG="./log/$TASK.log"
 
 HM=~/HM-16.9/
-HMOPT="-c $HM""cfg/encoder_lowdelay_main_rext.cfg -cf 400 -f 1 -fr 1 --InternalBitDepth=8"
+HMOPT="-c $HM""cfg/encoder_intra_main_rext.cfg -cf 400 -f 1 -fr 1 --InternalBitDepth=8"
 HMENC="$HM""bin/TAppEncoderStatic"
 HMDEC="$HM""bin/TAppDecoderStatic"
 #HMDEC="$HM""bin/TAppDecoderAnalyserStatic"
